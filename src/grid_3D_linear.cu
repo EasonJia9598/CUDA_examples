@@ -93,6 +93,4 @@ Results from example 2.4 using the grid3D_linear kernel to process 3D arrays wit
 addressing. The displayed array element has different 3D indices as compared to example 2.2 even
 though its linear index is the same as used in that example.
 
-
-
 */
