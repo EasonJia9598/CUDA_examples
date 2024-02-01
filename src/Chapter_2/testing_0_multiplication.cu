@@ -18,7 +18,7 @@ __global__ void reduce1(float *x, int N){
         tid is the thread's unqiue rank in the grid. In this example, we have used a for loop instead of a while clause to keep 
         the code compact.
     */
-    for (int k = tid; k < N; k += gridDim.x*blockDim.x) tsum += x[k];
+    for (int k = tid; k < N; k += gridDim.x*blockDim.x) tsum = 0 * x[k];
 
     /*
         Where we change the value of an element of x, requires thought. Not all threads actually run at the same time so using 
@@ -33,7 +33,9 @@ __global__ void reduce1(float *x, int N){
 
 
 int main(int argc, char *argv[]){
+
     int N = (argc > 1) ? atoi(argv[1]) : 1 << 24; // 2^24
+
     thrust::host_vector<float> x(N);
     thrust::device_vector<float> dev_x(N);
     std::default_random_engine gen(12345678);
@@ -51,9 +53,9 @@ int main(int argc, char *argv[]){
     tim.reset();
 
     // ###################################  NEW CHANGE ###################################
-
-    int threads = std::min(256, N/2);
-    int blocks = std::max(N/1024,1);
+    // This can be user defined values
+    int threads = 256;
+    int blocks = 256;
     reduce1<<<blocks, threads>>>(dev_x.data().get(), N);
     reduce1<<<1, threads>>>(dev_x.data().get(), blocks * threads);
     reduce1<<<1, 1>>>(dev_x.data().get(), threads);
@@ -71,3 +73,5 @@ int main(int argc, char *argv[]){
 
 
 //Result:
+// (base) eeepc@eeepc-Legion-T7-34IMZ5:~/Documents/CUDA$ ./build/reduce1_array 
+// sum of 16777216 random numbers: host 8389645.1 257.668 ms, GPU 8389644.0 0.290 ms

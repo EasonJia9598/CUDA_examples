@@ -11,7 +11,8 @@ __device__ float b[256][512][512]; // file scope
 __global__ void grid3D_linear(int nx, int ny, int nz, int id)
 {
 
-    // The variable tid is set to the current threads' rank in the grid of threads blocks using the standard formula for 1D thread and grid-blocks. 
+    // The variable tid is set to the current threads' rank in the grid of threads blocks using 
+    // the standard formula for 1D thread and grid-blocks. 
     int tid = blockIdx.x*blockDim.x + threadIdx.x;
     int array_size = nx * ny * nz;
     int total_threads = gridDim.x * blockDim.x;
